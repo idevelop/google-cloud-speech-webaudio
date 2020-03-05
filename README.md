@@ -2,13 +2,16 @@
 
 Speech recognition and synthesis using the Google Cloud Speech APIs, running in the browser, integrated with the Web Audio API for microphone input and playback.
 
+For now authorization only works with an API Key, you can create one at https://console.cloud.google.com/apis/credentials. 
+**Make sure you restrict it to only Cloud Speech-to-Text and Cloud Text-to-Speech APIs.**
+
+[Here's a demo page.](https://andrei.codes/cloud-speech/)
+
 ## Usage
 
 ```
 npm install google-cloud-speech-webaudio
 ```
-
-For now authorization only works with an API Key, you can create one at https://console.cloud.google.com/apis/credentials. **Make sure you restrict it to only Cloud Speech-to-Text and Cloud Text-to-Speech APIs.**
 
 ### Speech Recognition
 
