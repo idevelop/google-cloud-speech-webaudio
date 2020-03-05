@@ -2,8 +2,8 @@ const { speechToText } = require('./rest-api');
 
 const BUFFER_SIZE = 4096;
 
-// by default, browsers will return a 48000 sample rate audio context,
-// which leads to an HTTP request size of 1.3 MB for 10 seconds of audio.
+// by default, browsers will create a 48000 sample rate audio context,
+// which leads to an HTTP request size of ~1.3 MB for 10 seconds of audio.
 // setting the sample rate to 16000 lowers it to a more reasonable 420 KB.
 // the size could be further reduced through client-size gzip, TBD if it's worth it.
 const SAMPLE_RATE = 16000;
@@ -53,7 +53,7 @@ class GoogleSpeechRecognition {
       // Firefox will throw MediaStreamAudioSourceNodeDifferentRate when attempting
       // to connect a microphone stream with a sample rate of 48k to an audio context
       // with a sample rate of 16k. if that happens, recreate the audio context without
-      // any explicit sample rate
+      // an explicit sample rate.
       this.audioContext = new AudioContext();
       this.microphone = this.audioContext.createMediaStreamSource(stream);
     }
@@ -79,33 +79,40 @@ class GoogleSpeechRecognition {
   }
 
   disconnectMicrophoneAndProcessor() {
-    if (this.microphone != null) {
+    if (this.microphone) {
       this.microphone.disconnect();
       this.microphone.mediaStream.getTracks().forEach(track => track.stop());
       this.microphone = null;
     }
 
-    this.processor.disconnect();
+    if (this.processor) {
+      this.processor.disconnect();
+    }
   }
 
   async startListening() {
-    this.starting = true;
-
-    await this.connectMicrophoneAndProcessor();
-
-    if (!this.starting) {
-      this.disconnectMicrophoneAndProcessor();
+    if (this.starting) {
+      // already starting
       return;
     }
 
+    this.starting = true;
     this.outputBuffer = new ArrayBuffer(0);
+
+    await this.connectMicrophoneAndProcessor();
+
+    if (this.cancelStart) {
+      this.disconnectMicrophoneAndProcessor();
+      this.cancelStart = false;
+    }
+
     this.starting = false;
   }
 
-  async stopListening() {
+  async stopListening(languageCode = 'en-US') {
     if (this.starting) {
-      // use "starting" flag to resolve race condition between start and stop
-      this.starting = false;
+      // use "cancelStart" flag to resolve race condition between start and stop
+      this.cancelStart = true;
     }
 
     this.disconnectMicrophoneAndProcessor();
@@ -114,9 +121,10 @@ class GoogleSpeechRecognition {
       const apiResult = await speechToText(
         this.outputBuffer,
         this.audioContext.sampleRate,
+        languageCode,
         this.apiKey
       );
-      this.outputBuffer = null;
+      this.outputBuffer = new ArrayBuffer(0);
       return apiResult;
     }
   }

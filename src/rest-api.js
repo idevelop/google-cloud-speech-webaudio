@@ -1,7 +1,7 @@
 const base64 = require('base64-js');
 
-async function speechToText(audioBuffer, sampleRate, apiKey) {
-  // https://cloud.google.com/speech-to-text/docs/reference/rest/v1/speech/recognize
+async function speechToText(audioBuffer, sampleRate, languageCode, apiKey) {
+  // Reference: https://cloud.google.com/speech-to-text/docs/reference/rest/v1/speech/recognize
 
   const response = await fetch(
     `https://speech.googleapis.com/v1/speech:recognize?key=${apiKey}`,
@@ -14,7 +14,7 @@ async function speechToText(audioBuffer, sampleRate, apiKey) {
         config: {
           encoding: 'LINEAR16',
           sampleRateHertz: sampleRate,
-          languageCode: 'en-US',
+          languageCode: languageCode,
         },
         audio: {
           content: base64.fromByteArray(audioBuffer),
@@ -33,7 +33,7 @@ async function speechToText(audioBuffer, sampleRate, apiKey) {
 }
 
 async function textToSpeech(text, apiKey) {
-  // https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize
+  // Reference: https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize
 
   const response = await fetch(
     `https://texttospeech.googleapis.com/v1/text:synthesize?key=${apiKey}`,
