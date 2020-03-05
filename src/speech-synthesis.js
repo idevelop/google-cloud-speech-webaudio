@@ -9,6 +9,7 @@ class GoogleSpeechSynthesis {
     if (!this.audioContext) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new AudioContext();
+      this.audioContext.resume(); // Safari needs this for some reason
     }
 
     const audioBuffer = await textToSpeech(text, languageCode, this.apiKey);
