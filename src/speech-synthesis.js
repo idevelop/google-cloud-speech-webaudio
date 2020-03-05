@@ -5,13 +5,13 @@ class GoogleSpeechSynthesis {
     this.apiKey = apiKey;
   }
 
-  async speak(text) {
+  async speak(text, languageCode = 'en-US') {
     if (!this.audioContext) {
       const AudioContext = window.AudioContext || window.webkitAudioContext;
       this.audioContext = new AudioContext();
     }
 
-    const audioBuffer = await textToSpeech(text, this.apiKey);
+    const audioBuffer = await textToSpeech(text, languageCode, this.apiKey);
 
     this.audioContext.decodeAudioData(audioBuffer, buffer => {
       const source = this.audioContext.createBufferSource();

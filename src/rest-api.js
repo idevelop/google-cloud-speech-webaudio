@@ -32,7 +32,7 @@ async function speechToText(audioBuffer, sampleRate, languageCode, apiKey) {
   }
 }
 
-async function textToSpeech(text, apiKey) {
+async function textToSpeech(text, languageCode, apiKey) {
   // Reference: https://cloud.google.com/text-to-speech/docs/reference/rest/v1/text/synthesize
 
   const response = await fetch(
@@ -47,7 +47,7 @@ async function textToSpeech(text, apiKey) {
           text,
         },
         voice: {
-          languageCode: 'en-US',
+          languageCode: languageCode,
         },
         audioConfig: {
           audioEncoding: 'LINEAR16',
