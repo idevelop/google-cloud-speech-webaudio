@@ -21,10 +21,12 @@ import { GoogleSpeechRecognition } from 'google-cloud-speech-webaudio';
 const GOOGLE_API_KEY = '...';
 
 // Optionally define a regional endpoint: https://cloud.google.com/speech-to-text/docs/endpoints
-// If this parameter is not defined, the US endpoint will be used by default.
-const REGIONAL_ENDPOINT = 'https://eu-speech.googleapis.com'
+const EU_ENDPOINT = 'https://eu-speech.googleapis.com'
 
-const speechRecognition = new GoogleSpeechRecognition(GOOGLE_API_KEY, REGIONAL_ENDPOINT);
+// If this parameter is not defined, the US endpoint will be used by default.
+// const US_ENDPOINT = 'https://us-speech.googleapis.com'
+
+const speechRecognition = new GoogleSpeechRecognition(GOOGLE_API_KEY, EU_ENDPOINT);
 
 // start recording microphone audio to a buffer.
 // on first run it will request microphone permission.
