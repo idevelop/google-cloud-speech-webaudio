@@ -1,6 +1,6 @@
 const base64 = require('base64-js');
 
-async function speechToText(audioBuffer, sampleRate, languageCode, apiKey, regionalEndpoint = 'https://speech.googleapis.com') {
+async function speechToText(audioBuffer, sampleRate, languageCode, apiKey, regionalEndpoint) {
   // Reference: https://cloud.google.com/speech-to-text/docs/reference/rest/v1/speech/recognize
 
   const response = await fetch(

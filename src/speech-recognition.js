@@ -21,8 +21,9 @@ const combineBuffers = (a, b) => {
 };
 
 class GoogleSpeechRecognition {
-  constructor(apiKey) {
+  constructor(apiKey, regionalEndpoint = 'https://speech.googleapis.com') {
     this.apiKey = apiKey;
+    this.regionalEndpoint = regionalEndpoint;
     this.tempBuffer = new ArrayBuffer(BUFFER_SIZE * 2);
     this.tempBufferView = new Uint16Array(this.tempBuffer);
   }
@@ -122,7 +123,8 @@ class GoogleSpeechRecognition {
         this.outputBuffer,
         this.audioContext.sampleRate,
         languageCode,
-        this.apiKey
+        this.apiKey,
+        this.regionalEndpoint
       );
       this.outputBuffer = new ArrayBuffer(0);
       return apiResult;
